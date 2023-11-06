@@ -48,7 +48,7 @@ def contain_msg(result,msg):
   for idx in range(len(result)):
     res = result[idx]
     if res is None:
-      return False
+      continue
     for line in res:
       text=line[1][0]
       debug(text)
@@ -119,13 +119,13 @@ def I_want_to_leave_please():
     #   cv2.imwrite('./leave0.png', tile)
     # else:
     #   cv2.imwrite('./leave1.png', tile)
-    # i+=1
+    i+=1
     result = g_ocr.ocr(tile, cls=False,bin=True)
     for idx in range(len(result)):
       res = result[idx]
       if res is None:
         debug("error:res is None")
-        return False
+        continue
       for line in res:
         text=line[1][0]
         debug(text)
@@ -134,9 +134,9 @@ def I_want_to_leave_please():
           #保存下来，下次直接尝试识别这个小区域，如果命中可以加快速度
           if g_leave_pos is not sub_im:
             g_leave_pos= SubImg(x_begin,
-                                int(pos[0][1]+height*search_start),
+                                int(pos[0][1]+height*search_start-10),
                                 int(x_end),
-                                int(pos[2][1]+height*search_start)
+                                int(pos[2][1]+height*search_start+10)
                                 )
           else:
             debug("leave 命中")
@@ -163,7 +163,7 @@ def I_want_to_ask_you_something():
     print("ask index:",index)
     top=(index*g_option_height + g_optiony_start)
     tile = im[int(top*height):int((top+g_option_height)*height), int(width*578/1280):int(width*704/1280)]
-    # cv2.imwrite('./'+str(index)+'ask.png', tile)
+    #cv2.imwrite('./ask'+str(index)+'.png', tile)
     result = g_ocr.ocr(tile, cls=False,bin=True)
     if contain_msg(result, "问你些事"):
       if g_ask_you_sth_index==index:
